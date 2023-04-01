@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace hashhh
 {
@@ -48,7 +49,7 @@ namespace hashhh
 
         private void function_f_xor_lines(ref int[,,] A)
         {
-            for (int k = 0; k < l; k++)
+            for (int k = 1; k < l; k++)
             {
                 for (int i = 0; i < n; i++)
                 {
@@ -61,9 +62,20 @@ namespace hashhh
                 }
             }
         }
+        private string XOR_16_bit(char aa , char bb)
+        {
+            string a = char.ToString(aa);
+            string b = char.ToString(bb);
+
+            int integer_a = Convert.ToInt32(a, 16);
+            int integer_b = Convert.ToInt32(b, 16);
+            int integer_c = (integer_a + integer_b) % 16;
+            string c = Convert.ToString(integer_c, 16); 
+            return c;
+        }
         private void function_f_xor_columns(ref int[,,] A)
         {
-            for (int k = 0; k < l; k++)
+            for (int k = 1; k < l; k++)
             {
                 for (int j = 0; j < n; j++)
                 {
@@ -114,7 +126,7 @@ namespace hashhh
             //and turn each block into the 16th digit
             int n = 45 / 4; // count of blocks
             int m = 4; // len of blocks
-            string 16th_form = "";
+            string the16_form = "";
             for (int i = n - 1; i >= 0; i--) // from end
             {
                 string text = "";
@@ -122,18 +134,19 @@ namespace hashhh
                 {
                     text += sweep_array[i * 4 + j];
                 }
-                16th_form += Convert.ToString(text, 16)
+                int integer = Convert.ToInt32(text, 2);
+                the16_form += Convert.ToString(integer,16);
             }
-            16th_form += sweep_array[0]; // last element
+            the16_form += sweep_array[0]; // last element
             // reverse
             string help = "";
-            for (int i = 16th_form.Lenght - 1; i >= 0; i--)
+            for (int i = the16_form.Length - 1; i >= 0; i--)
             {
-                help += 16th_form[i];
+                help += the16_form[i];
             }
-            16th_form = help;
+            the16_form = help;
             //
-            return 16th_form;
+            return the16_form;
         }
         private void hash()
         {
@@ -180,7 +193,10 @@ namespace hashhh
                     {
                         for (int k = 0; k < l; k++)
                         {
-                            A[i, j, k] = b1[counter];
+                            if (b1[counter]=='1')
+                                A[i, j, k] = 1;
+                            else
+                                A[i, j, k] = 0;
                             counter++;
                         }
                     }
@@ -203,14 +219,16 @@ namespace hashhh
                 }
                 // step 8 : it is necessary to “squeeze” / array sweep from colums
                 string sweep_array = array_sweep_from_colums(A);
-                string 16th_form_of_sweep_array = get_16th_form(sweep_array);
+                string the16_form_of_sweep_array = get_16th_form(sweep_array);
                 // step 9: XOR of hash of every block from modul 16
-                for (int i = 0; i < 16th_form_of_sweep_array.Lenght; i++)
+                string help = "";
+                for (int i = 0; i < the16_form_of_sweep_array.Length; i++)
                 {
-                    hash[i] = Convert.ToString(Convert.ToInt32(hash[i],16) + Convert.ToInt32(16th_form_of_sweep_array[i]),16)% 16,16);
+                    help += XOR_16_bit(hash[i], the16_form_of_sweep_array[i]);
                 }
+                hash = help;
             }
-
+            richTextBox_hash.Text = hash;
         }
     }
 }
