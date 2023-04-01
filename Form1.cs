@@ -22,10 +22,15 @@ namespace hashhh
         int c = 20; // len of expander block
         int n = 3, m = 3, l = 5; // size of matrix
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button_run_Click(object sender, EventArgs e)
         {
             hash();
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
         private string int_to_binar_8bit(int a)
         {
             string binar = "";
@@ -119,6 +124,7 @@ namespace hashhh
             }
             return text;
         }
+
         private string get_16th_form(string sweep_array)
         {
             //Let's represent our hash in 16th form. For this,
@@ -148,6 +154,9 @@ namespace hashhh
             //
             return the16_form;
         }
+        /// <summary>
+        /// /
+        /// </summary>
         private void hash()
         {
             // step 1: get the binar cod
